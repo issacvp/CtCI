@@ -1,29 +1,47 @@
 package CH01;
 
+/**
+ * 
+ * 1.7 Rotate Matrix: Given an image represented by an NxN matrix, where each
+ * pixel in the image is 4 bytes, write a method to rotate the image by 90
+ * degrees. Can you do this in place? Hints: #51, # 100
+ * 
+ *     [1  2]    [3 1]
+ *             => 
+ *     [3  4]    [4 2]
+ *     [0,0] -> [0,1]
+ *     [0,1] -> [1,1]
+ *     [1,0] -> [0,0]
+ *     [1,1] -> [1,0]
+ *     for i =0 to n 
+			temp = top[i]
+			top[i] = left[i]
+			left[i] = bottom[i]
+ 			bottom[i] = right[i];
+ 			right[i] = temp
+ */
 public class Q17MatrixRotation {
-
-	public int[][] matrixRotation(int data[][]){
-		int data2[][] = new int[data.length][data.length];
-		for(int i=0;i<data.length;i++) {
-			for(int j=0; j< data[i].length;j++) {
-				data2[j][data.length-(i+1)] = data[i][j];
+	public boolean matrixRotation(int[][] matrix) {
+		int n = matrix.length;
+		for(int layer=0; layer < n/2 ; layer++) {
+			int first = layer;
+			int last = n - 1 - layer;
+			for(int i = first ; i< last ; i++) {
+				int offset = i - first ; 
+				int top = matrix[first][i]; // save top
+				//first -> top 
+				matrix[first][i] = matrix[last-offset][first];
+				
+				//bottom -> left 
+				matrix[last-offset][first] = matrix[last][last-offset];
+				
+				//right -> bottom 
+				matrix[last][last-offset] = matrix[i][last];
+				
+				//top -> right 
+				matrix[i][last] = top; // right  <- saved top 
 			}
 		}
-		return data2;
+		return true;
 	}
-	public static void main(String[] args) {
-		Q17MatrixRotation obj = new Q17MatrixRotation();
-		int data[][] = { { 1, 2, 3, 4 },
-				         { 5, 6, 7, 8 },
-				         { 9, 10, 11, 12 },
-				         { 13, 14, 15, 16 } };
-		data = obj.matrixRotation(data);
-		for(int i=0;i<data.length;i++) {
-			for(int j=0; j< data[i].length;j++) {
-				System.out.print(data[i][j] +"\t");
-			}
-			System.out.println("\n\n");
-		}
-	}
-
 }
